@@ -4,7 +4,7 @@
 
 export const environment = {
     production: false,
-    apiUrl: 'http://localhost:4000'
+    apiUrl: 'https://lab7-backend-6o88-ymfb.onrender.com'
 };
 
 /*
