@@ -52,8 +52,21 @@ export class RegisterComponent implements OnInit {
         this.accountService.register(this.form.value)
             .pipe(first())
             .subscribe({
-                next: () => {
+                next: (res: any) => {
                     this.alertService.success('Registration successful, please check your email for verification instructions', { keepAfterRouteChange: true });
+                    
+                    if (res && res.verificationLink) {
+                        setTimeout(() => {
+                            this.alertService.info(`
+                                <h4>Verification Email</h4>
+                                <p>Thanks for registering!</p>
+                                <p>Please click the below link to verify your email address:</p>
+                                <p><a href="${res.verificationLink}">${res.verificationLink}</a></p>
+                                <div><strong>NOTE:</strong> The API returned this link so you can test without SMTP configured.</div>
+                            `, { autoClose: false, keepAfterRouteChange: true });
+                        });
+                    }
+
                     this.router.navigate(['../login'], { relativeTo: this.route });
                 },
                 error: error => {
