@@ -1,0 +1,25 @@
+<div class="app-container">
+    <!-- main nav -->
+    <nav class="navbar navbar-expand navbar-light bg-white border-bottom px-4" *ngIf="account">
+        <div class="container-fluid">
+            <span class="navbar-brand">Lab7</span>
+            <div class="navbar-nav me-auto">
+                <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-item nav-link">Dashboard</a>
+                <a routerLink="/profile" routerLinkActive="active" class="nav-item nav-link">Profile Settings</a>
+                <a *ngIf="account.role === Role.Admin" routerLink="/admin" routerLinkActive="active" class="nav-item nav-link">Administration</a>
+            </div>
+            <div class="navbar-nav ms-auto">
+                <button (click)="logout()" class="btn btn-outline-secondary btn-sm">Sign Out</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- subnav router outlet -->
+    <router-outlet name="subnav"></router-outlet>
+
+    <!-- global alert -->
+    <alert></alert>
+
+    <!-- main router outlet -->
+    <router-outlet></router-outlet>
+</div>

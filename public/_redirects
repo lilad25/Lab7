@@ -1,0 +1,3 @@
+/* SPA Routing Fix for Netlify
+   Redirects all routes to index.html so Angular Router handles them */
+/*    /index.html   200
