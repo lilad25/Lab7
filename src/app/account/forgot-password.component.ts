@@ -41,7 +41,19 @@ export class ForgotPasswordComponent implements OnInit {
             .pipe(first())
             .pipe(finalize(() => this.loading = false))
             .subscribe({
-                next: () => this.alertService.success('Please check your email for password reset instructions'),
+                next: (res: any) => {
+                    this.alertService.success('Please check your email for password reset instructions');
+                    if (res && res.resetLink) {
+                        setTimeout(() => {
+                            this.alertService.info(`
+                                <h4>Reset Password Email</h4>
+                                <p>Please click the below link to reset your password:</p>
+                                <p><a href="${res.resetLink}">${res.resetLink}</a></p>
+                                <div><strong>NOTE:</strong> The API returned this link so you can test without SMTP configured.</div>
+                            `, { autoClose: false });
+                        });
+                    }
+                },
                 error: error => this.alertService.error(error)
             });
     }
