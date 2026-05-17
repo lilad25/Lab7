@@ -1,6 +1,6 @@
-﻿<h1>Update Profile</h1>
+<h1>Update Profile</h1>
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
-    <div class="row">
+    <div class="row align-items-end">
         <div class="mb-3 col-2">
             <label class="form-label">Title</label>
             <select formControlName="title" class="form-select" [ngClass]="{ 'is-invalid': submitted && f.title.errors }">
@@ -39,7 +39,7 @@
     </div>
     <h3 class="pt-3">Change Password</h3>
     <p>Leave blank to keep the same password</p>
-    <div class="row">
+    <div class="row align-items-end">
         <div class="mb-3 col">
             <label class="form-label">Password</label>
             <input type="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
