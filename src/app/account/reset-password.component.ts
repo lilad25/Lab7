@@ -20,8 +20,7 @@ export class ResetPasswordComponent implements OnInit {
     form!: FormGroup;
     loading = false;
     submitted = false;
-    debugError: string = '';
-
+    submitted = false;
     constructor(
         private formBuilder: FormBuilder,
         private route: ActivatedRoute,
@@ -39,8 +38,6 @@ export class ResetPasswordComponent implements OnInit {
         });
 
         const token = this.route.snapshot.queryParams['token'];
-        this.debugError = 'Token from URL: ' + token;
-
         // remove token from url to prevent http referer leakage
         this.router.navigate([], { relativeTo: this.route, replaceUrl: true });
 
