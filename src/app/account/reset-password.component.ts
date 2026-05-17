@@ -45,10 +45,8 @@ export class ResetPasswordComponent implements OnInit {
         this.router.navigate([], { relativeTo: this.route, replaceUrl: true });
 
         // Force validation to bypass backend check entirely for the UI!
-        setTimeout(() => {
-            this.token = token;
-            this.tokenStatus = TokenStatus.Valid;
-        }, 500);
+        this.token = token;
+        this.tokenStatus = TokenStatus.Valid;
     }
 
     // convenience getter for easy access to form fields
