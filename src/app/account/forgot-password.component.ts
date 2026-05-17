@@ -9,6 +9,7 @@ export class ForgotPasswordComponent implements OnInit {
     form!: FormGroup;
     loading = false;
     submitted = false;
+    resetLink: string | null = null;
 
     constructor(
         private formBuilder: FormBuilder,
@@ -42,16 +43,10 @@ export class ForgotPasswordComponent implements OnInit {
             .pipe(finalize(() => this.loading = false))
             .subscribe({
                 next: (res: any) => {
-                    this.alertService.success('Please check your email for password reset instructions');
                     if (res && res.resetLink) {
-                        setTimeout(() => {
-                            this.alertService.info(`
-                                <h4>Reset Password Email</h4>
-                                <p>Please click the below link to reset your password:</p>
-                                <p><a href="${res.resetLink}">${res.resetLink}</a></p>
-                                <div><strong>NOTE:</strong> The API returned this link so you can test without SMTP configured.</div>
-                            `, { autoClose: false });
-                        });
+                        this.resetLink = res.resetLink;
+                    } else {
+                        this.alertService.success('Please check your email for password reset instructions');
                     }
                 },
                 error: error => this.alertService.error(error)
