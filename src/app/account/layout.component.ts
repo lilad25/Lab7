@@ -11,9 +11,7 @@ export class LayoutComponent {
     ) {
         // redirect to home if already logged in, unless accessing password recovery
         if (this.accountService.accountValue) {
-            if (this.router.url.includes('forgot-password') || this.router.url.includes('reset-password')) {
-                this.accountService.logout();
-            } else {
+            if (!this.router.url.includes('forgot-password') && !this.router.url.includes('reset-password')) {
                 this.router.navigate(['/']);
             }
         }
