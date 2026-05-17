@@ -20,6 +20,7 @@ export class ResetPasswordComponent implements OnInit {
     form!: FormGroup;
     loading = false;
     submitted = false;
+    debugError: string = '';
 
     constructor(
         private formBuilder: FormBuilder,
@@ -38,6 +39,7 @@ export class ResetPasswordComponent implements OnInit {
         });
 
         const token = this.route.snapshot.queryParams['token'];
+        this.debugError = 'Token from URL: ' + token;
 
         // remove token from url to prevent http referer leakage
         this.router.navigate([], { relativeTo: this.route, replaceUrl: true });
@@ -46,10 +48,12 @@ export class ResetPasswordComponent implements OnInit {
             .pipe(first())
             .subscribe({
                 next: () => {
+                    this.debugError += ' -> Valid!';
                     this.token = token;
                     this.tokenStatus = TokenStatus.Valid;
                 },
-                error: () => {
+                error: (err) => {
+                    this.debugError += ' -> Error: ' + JSON.stringify(err);
                     this.tokenStatus = TokenStatus.Invalid;
                 }
             });
