@@ -20,7 +20,6 @@ export class ResetPasswordComponent implements OnInit {
     form!: FormGroup;
     loading = false;
     submitted = false;
-    submitted = false;
     constructor(
         private formBuilder: FormBuilder,
         private route: ActivatedRoute,
