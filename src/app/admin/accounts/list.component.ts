@@ -10,9 +10,18 @@ export class ListComponent implements OnInit {
     constructor(private accountService: AccountService) { }
 
     ngOnInit() {
+        console.log('🚀 ListComponent ngOnInit: calling accountService.getAll()');
         this.accountService.getAll()
             .pipe(first())
-            .subscribe(accounts => this.accounts = accounts);
+            .subscribe({
+                next: accounts => {
+                    console.log('✅ ListComponent received accounts:', accounts);
+                    this.accounts = accounts;
+                },
+                error: err => {
+                    console.error('❌ ListComponent getAll error:', err);
+                }
+            });
     }
 
     deleteAccount(id: string) {
