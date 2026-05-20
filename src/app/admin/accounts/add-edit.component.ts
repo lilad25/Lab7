@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, NgZone } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
@@ -20,7 +20,9 @@ export class AddEditComponent implements OnInit {
         private route: ActivatedRoute,
         private router: Router,
         private accountService: AccountService,
-        private alertService: AlertService
+        private alertService: AlertService,
+        private cdr: ChangeDetectorRef,
+        private zone: NgZone
     ) { }
 
     ngOnInit() {
@@ -46,9 +48,21 @@ export class AddEditComponent implements OnInit {
             this.loading = true;
             this.accountService.getById(this.id)
                 .pipe(first())
-                .subscribe(x => {
-                    this.form.patchValue(x);
-                    this.loading = false;
+                .subscribe({
+                    next: x => {
+                        this.zone.run(() => {
+                            this.form.patchValue(x);
+                            this.loading = false;
+                            this.cdr.detectChanges();
+                        });
+                    },
+                    error: err => {
+                        console.error('❌ edit load error:', err);
+                        this.zone.run(() => {
+                            this.loading = false;
+                            this.cdr.detectChanges();
+                        });
+                    }
                 });
         }
     }
@@ -84,12 +98,17 @@ export class AddEditComponent implements OnInit {
             .pipe(first())
             .subscribe({
                 next: () => {
-                    this.alertService.success(message, { keepAfterRouteChange: true });
-                    this.router.navigateByUrl('/admin/accounts');
+                    this.zone.run(() => {
+                        this.alertService.success(message, { keepAfterRouteChange: true });
+                        this.router.navigateByUrl('/admin/accounts');
+                    });
                 },
                 error: error => {
-                    this.alertService.error(error);
-                    this.submitting = false;
+                    this.zone.run(() => {
+                        this.alertService.error(error);
+                        this.submitting = false;
+                        this.cdr.detectChanges();
+                    });
                 }
             });
     }

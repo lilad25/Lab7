@@ -33,11 +33,26 @@ export class ListComponent implements OnInit {
 
     deleteAccount(id: string) {
         const account = this.accounts!.find(x => x.id === id);
-        account.isDeleting = true;
+        this.zone.run(() => {
+            account.isDeleting = true;
+            this.cdr.detectChanges();
+        });
         this.accountService.delete(id)
             .pipe(first())
-            .subscribe(() => {
-                this.accounts = this.accounts!.filter(x => x.id !== id)
+            .subscribe({
+                next: () => {
+                    this.zone.run(() => {
+                        this.accounts = this.accounts!.filter(x => x.id !== id);
+                        this.cdr.detectChanges();
+                    });
+                },
+                error: err => {
+                    console.error('❌ delete error:', err);
+                    this.zone.run(() => {
+                        account.isDeleting = false;
+                        this.cdr.detectChanges();
+                    });
+                }
             });
     }
 }
