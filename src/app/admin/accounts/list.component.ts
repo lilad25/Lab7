@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, NgZone } from '@angular/core';
 import { first } from 'rxjs/operators';
 
 import { AccountService } from '@app/_services';
@@ -7,7 +7,11 @@ import { AccountService } from '@app/_services';
 export class ListComponent implements OnInit {
     accounts?: any[];
 
-    constructor(private accountService: AccountService) { }
+    constructor(
+        private accountService: AccountService,
+        private cdr: ChangeDetectorRef,
+        private zone: NgZone
+    ) { }
 
     ngOnInit() {
         console.log('🚀 ListComponent ngOnInit: calling accountService.getAll()');
@@ -16,7 +20,10 @@ export class ListComponent implements OnInit {
             .subscribe({
                 next: accounts => {
                     console.log('✅ ListComponent received accounts:', accounts);
-                    this.accounts = accounts;
+                    this.zone.run(() => {
+                        this.accounts = accounts;
+                        this.cdr.detectChanges();
+                    });
                 },
                 error: err => {
                     console.error('❌ ListComponent getAll error:', err);
